@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:projectwithnode/controllers/auth_controller.dart';
 import 'package:projectwithnode/views/screens/authentication_screens/register_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   // const LoginScreen({super.key});
   final GlobalKey <FormState> _formKey=GlobalKey<FormState>();
+  late String email;
+  late String password;
 
+  final AuthController _authController=AuthController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +42,9 @@ class LoginScreen extends StatelessWidget {
                     letterSpacing: 0.2),),
                   ),
                   TextFormField(
+                    onChanged: (value){
+                      email=value;
+                    },
                     validator: (value){
                       if(value!.isEmpty){
                         return "enter your email";
@@ -70,6 +77,9 @@ class LoginScreen extends StatelessWidget {
                     letterSpacing: 0.2),),
                   ),
                   TextFormField(
+                    onChanged: (value){
+                      password=value;
+                    },
                     validator: (value){
                       if(value!.isEmpty){
                         return "enter your password";
@@ -97,9 +107,10 @@ class LoginScreen extends StatelessWidget {
                   ), 
                   SizedBox(height: 20,),
                   InkWell(
-                    onTap: (){
+                    onTap: () async{
                       if(_formKey.currentState!.validate()){
-                        print("correct");
+                       await  _authController.signInUser(context: context, email: email, password: password);
+                        // print("correct");
                       }
                       else{
                         print("error");
