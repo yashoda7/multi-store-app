@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 class User {
-  final String _id;
+  final String id;
   final String fullName;
   final String email;
   final String state;
@@ -11,11 +11,11 @@ class User {
   final String password;
   final String token;
 
-  User({required String id, required this.fullName, required this.email, required this.state, required this.city, required this.locality, required this.password,required this.token}) : _id = id;
+  User({required String this.id, required this.fullName, required this.email, required this.state, required this.city, required this.locality, required this.password,required this.token}) ;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      '_id': _id,
+      '_id': id,
       'fullName': fullName,
       'email': email,
       'state': state,

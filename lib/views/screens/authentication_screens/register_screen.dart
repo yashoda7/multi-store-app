@@ -3,13 +3,38 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:projectwithnode/controllers/auth_controller.dart';
 import 'package:projectwithnode/views/screens/authentication_screens/login_screen.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
   // const RegisterScreen({super.key});
   final GlobalKey <FormState> _formKey=GlobalKey<FormState>();
+
   final AuthController _authController=AuthController();
+
   late String email;
+
   late String fullName;
+
   late String password;
+  
+  bool isLoading=false;
+
+  registerUser() async{
+    setState(() {
+      isLoading=true;
+    });
+    
+    await  _authController.SignUpUsers(context: context, email: email,fullName: fullName, password: password).whenComplete((){
+      setState(() {
+      isLoading=false;
+    });
+    });
+    
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,8 +194,9 @@ class RegisterScreen extends StatelessWidget {
                   InkWell (
                     onTap: () async{
                       if(_formKey.currentState!.validate()){
-                        print("connected");
-                        await  _authController.SignUpUsers(context: context, email: email, fullName: fullName, password: password);
+                        // print("connected");
+                        // await  _authController.SignUpUsers(context: context, email: email, fullName: fullName, password: password);
+                        registerUser();
                       }
                       else{
                         print("wrong");
@@ -186,7 +212,8 @@ class RegisterScreen extends StatelessWidget {
                         )
                       ),
                       child: GestureDetector(
-                        child: Center(child: Text("Sign up",
+                        child: Center(child: isLoading ? CircularProgressIndicator(color: Colors.white,):
+                        Text("Sign up",
                         style: GoogleFonts.getFont("Lato",color: Colors.white,
                       // fontWeight: FontWeight.bold,
                       fontSize: 17,

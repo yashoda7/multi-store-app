@@ -3,13 +3,37 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:projectwithnode/controllers/auth_controller.dart';
 import 'package:projectwithnode/views/screens/authentication_screens/register_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   // const LoginScreen({super.key});
   final GlobalKey <FormState> _formKey=GlobalKey<FormState>();
+
   late String email;
+
   late String password;
 
+  bool isLoading=false;
+
+  loginUser() async{
+    setState(() {
+      isLoading=true;
+    });
+    
+    await  _authController.signInUser(context: context, email: email, password: password).whenComplete((){
+      setState(() {
+      isLoading=false;
+    });
+    });
+    
+
+  }
+
   final AuthController _authController=AuthController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,7 +133,8 @@ class LoginScreen extends StatelessWidget {
                   InkWell(
                     onTap: () async{
                       if(_formKey.currentState!.validate()){
-                       await  _authController.signInUser(context: context, email: email, password: password);
+                      //  await  _authController.signInUser(context: context, email: email, password: password);
+                      loginUser();
                         // print("correct");
                       }
                       else{
@@ -126,7 +151,8 @@ class LoginScreen extends StatelessWidget {
                         )
                       ),
                       child: GestureDetector(
-                        child: Center(child: Text("Sign in",
+                        child: Center(
+                          child:  isLoading ?CircularProgressIndicator(color: Colors.white,) :Text("Sign in",
                         style: GoogleFonts.getFont("Lato",color: Colors.white,
                       // fontWeight: FontWeight.bold,
                       fontSize: 17,
