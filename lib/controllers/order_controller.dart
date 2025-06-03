@@ -67,4 +67,25 @@ class OrderController {
       throw Exception("Failed to load ");
     }
   }
+  // method for deleting items from orders
+  Future<void> deleteOrder({required String id,required context}) async{
+    try{
+      http.Response response=await http.delete(Uri.parse("$uri/api/orders/$id"),
+      headers: <String,String>{
+        "Content-Type":"application/json; charset=UTF-8",
+      }
+      );
+      manageHttpResponse(
+        response: response, 
+      context: context,
+       onSucess: (){
+        showSnackBar(context, "Order Deleted Sucessfully ");
+       });
+
+    }
+    catch(e){
+      showSnackBar(context,e.toString());
+
+    }
+  }
 }

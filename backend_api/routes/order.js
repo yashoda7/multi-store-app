@@ -84,5 +84,23 @@ orderRouter.delete("/api/orders/:id",async(req,res) => {
         return res.status(500).json({error:"an internal error has occured"});
 
     }
-})
+});
+// get route for fetching items based on vendorId
+orderRouter.get("/api/orders/:vendorId",async(req,res) => {
+    try{
+        const{vendorId} =req.params;
+        const orders=await Order.find({vendorId});
+        // if no orders found return 404 status
+        if(orders.length ==0){
+            return res.status(404).json({msg:"NO orders found this buyer"});
+        }
+        return res.status(200).json(orders);
+
+    }
+    catch(e){
+        res.status(500).json({error:e.message});
+    }
+
+
+});
 module.exports=orderRouter;
