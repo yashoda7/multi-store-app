@@ -1,51 +1,50 @@
 // import 'package:projectwithnode/controllers/cate';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:projectwithnode/controllers/category_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:projectwithnode/models/category.dart';
+import 'package:projectwithnode/providers/category_provider.dart';
 import 'package:projectwithnode/views/screens/details/screens/innercategory_screen.dart';
 import 'package:projectwithnode/views/screens/nav_screens/widgets/reusable_text_widget.dart';
+// import 'package:projectwithnode/views/screens/nav_screens/widgets/reusable_text_widget.dart';
 
-class CategoryWidget extends StatefulWidget {
+class CategoryWidget extends ConsumerStatefulWidget {
   const CategoryWidget({super.key});
 
   @override
-  State<CategoryWidget> createState() => _CategoryWidgetState();
+  ConsumerState<CategoryWidget> createState() => _CategoryWidgetState();
 }
 
-class _CategoryWidgetState extends State<CategoryWidget> {
+class _CategoryWidgetState extends ConsumerState<CategoryWidget> {
   //A future the list of categories once loaded from th api
   late Future<List<Category>> futureCategories;
-  Categorycontroller _categorycontroller=Categorycontroller();
+  // Categorycontroller _categorycontroller=Categorycontroller();
   void initState(){
     super.initState();
-    futureCategories=_categorycontroller.loadCategories();
+    // futureCategories=_categorycontroller.loadCategories();
+    _fetechCategories();
+  }
+  Future<void> _fetechCategories() async{
+    final Categorycontroller categorycontroller=Categorycontroller();
+    try{
+      final categories= await categorycontroller.loadCategories();
+      // final  cat=await 
+      ref.read(categoryProvider.notifier).setCategory(categories);
+
+    }
+    catch(e){
+
+    }
+
   }
   @override
   Widget build(BuildContext context) {
+    final categories=ref.watch(categoryProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const ReusableTextWidget(title: "categories", subtitle: "view all"),
-        SizedBox(height: 10,),
-        FutureBuilder(future:futureCategories,
-         builder: (context,snapshot){
-          if(snapshot.connectionState == ConnectionState.waiting){
-            return Center(child:  CircularProgressIndicator());
-          }
-          else if(snapshot.hasError){
-            return Center(
-              child: Text("Error: ${snapshot.error}"),
-            );
-          }
-          else if(!snapshot.hasData || snapshot.data!.isEmpty){
-            return Center(
-              child: Text("No Banners"),
-            );
-          }
-          else{
-            final categories=snapshot.data;
-            return SingleChildScrollView(
-              child: GridView.builder(
+        ReusableTextWidget(title: "Categories", subtitle: "View All"),
+        GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: categories!.length,
                 shrinkWrap: true,
@@ -83,11 +82,6 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                         ),
                       );
                }),
-            );
-          }
-         }
-        ),
-        
       ],
     );  
   }
