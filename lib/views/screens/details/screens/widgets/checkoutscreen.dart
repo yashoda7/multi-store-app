@@ -274,11 +274,11 @@ class _CheckoutscreenState extends ConsumerState<Checkoutscreen> {
                       var item = entry.value;
                       await _orderController.uploadOrders(
                         id: "",
-                        fullName: user!.fullName,
-                        email: user.email,
-                        state: user.state ?? "AP",
-                        city: user.city ?? "ATP",
-                        locality: user.locality ?? "AP",
+                        fullName: ref.read(useprovider)!.fullName,
+                        email: ref.read(useprovider)!.email,
+                        state: ref.read(useprovider)!.state,
+                        city: ref.read(useprovider)!.city,
+                        locality: ref.read(useprovider)!.locality,
                         productName: item.productName,
                         productPrice: item.productPrice,
                         quantity: item.quantity,
