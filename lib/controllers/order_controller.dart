@@ -88,4 +88,15 @@ class OrderController {
 
     }
   }
+  
+   Future<int> getDeliveredOrderCount({required String buyerId}) async {
+    try {
+      List<Order> orders = await loadOrders(buyerId: buyerId);
+      // Filter only delivered orders belonging to the correct buyer ID
+      int deliveredCount = orders.where((order) => order.delivered && order.buyerId == buyerId).length;
+      return deliveredCount;
+    } catch (e) {
+      throw Exception("Error counting Delivered Orders");
+    }
+  }
 }
